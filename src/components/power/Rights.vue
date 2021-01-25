@@ -1,0 +1,91 @@
+<template>
+  <div>
+    <!-- 面包屑导航区域 -->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>权限管理</el-breadcrumb-item>
+      <el-breadcrumb-item>权限列表</el-breadcrumb-item>
+    </el-breadcrumb>
+    <!-- 卡片视图 -->
+    <el-card>
+        <!-- :config="config" -->
+      <!-- <Table
+        :tableData="rightsList"
+        :tableLabel="tableLabel"
+        
+        @changePage="getRightsList()"
+        @edit="editUser"
+        @del="delUser"
+      >
+      <el-table-column label="权限等级" prop="level" name="tag">
+        <template slot-scope="scope" >
+          <el-tag v-if="scope.row.level === '0'">一级</el-tag>
+          <el-tag type="success" v-else-if="scope.row.level === '1'"
+            >二级</el-tag
+          >
+          <el-tag type="warning" v-else>三级</el-tag>
+        </template>
+      </el-table-column>
+      </Table> -->
+      <el-table :data="rightsList" border stripe>
+        <el-table-column type="index"></el-table-column>
+        <el-table-column label="权限名称" prop="authName"></el-table-column>
+        <el-table-column label="路径" prop="path"></el-table-column>
+        <el-table-column label="权限等级" prop="level">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.level === '0'">一级</el-tag>
+            <el-tag type="success" v-else-if="scope.row.level === '1'"
+              >二级</el-tag
+            >
+            <el-tag type="warning" v-else>三级</el-tag>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+  </div>
+</template>
+
+<script>
+import Table from "../assembly/Table";
+export default {
+  components: {
+    Table,
+  },
+  data() {
+    return {
+      // 权限列表
+      rightsList: [],
+      tableLabel:[
+          {
+              label:"权限名称",
+              prop:"authName",
+              width:200,
+          },
+          {
+              label:"路径",
+              prop:"path",
+              width:200,
+          },
+         
+      ],
+    };
+  },
+  created() {
+    this.getRightsList();
+  },
+  methods: {
+    // 获取列表权限
+    async getRightsList() {
+      const { data: res } = await this.$http.get("rights/list");
+      if (res.meta.status !== 200) this.$message.error("获取权限列表失败");
+      this.rightsList = res.data;
+      // console.log(res.data)
+    },
+    editUser(){},
+    delUser(){},
+  },
+};
+</script>
+
+<style lang="less" scoped>
+</style>
